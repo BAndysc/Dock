@@ -26,6 +26,25 @@
                         CanCreateItem="{Binding CanCreateDocument}"
                         DockProperties.IsDropArea="True">
             <DockTabStrip.DataTemplates>
+              <DataTemplate DataType="dmc:ITool">
+                <StackPanel Background="Transparent"
+                            Orientation="Horizontal"
+                            Spacing="2"
+                            DockProperties.IsDragArea="True"
+                            DockProperties.IsDropArea="True">
+                  <Panel Margin="2">
+                    <TextBlock Text="{Binding Title}" Padding="2" />
+                  </Panel>
+                  <Button x:Name="PART_CloseButton"
+                          Command="{Binding Owner.Factory.CloseDockable}"
+                          CommandParameter="{Binding}"
+                          Classes="documentTabButton closeButton"
+                          IsVisible="{Binding CanClose}"
+                          x:CompileBindings="False">
+                    <Path x:Name="PART_ClosePath" Classes="closeButton" />
+                  </Button>
+                </StackPanel>
+              </DataTemplate>
               <DataTemplate DataType="core:IDockable">
                 <DockableControl TrackingMode="Tab">
                   <StackPanel Background="Transparent"
