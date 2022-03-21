@@ -517,6 +517,7 @@ namespace Dock.Model
                 return;
             }
 
+            bool isActiveDockable = dock.ActiveDockable == dockable;
             var index = dock.VisibleDockables.IndexOf(dockable);
             if (index < 0)
             {
@@ -526,15 +527,18 @@ namespace Dock.Model
             dock.VisibleDockables.Remove(dockable);
             OnDockableRemoved(dockable);
 
-            var indexActiveDockable = index > 0 ? index - 1 : 0;
-            if (dock.VisibleDockables.Count > 0)
+            if (isActiveDockable)
             {
-                var nextActiveDockable = dock.VisibleDockables[indexActiveDockable];
-                dock.ActiveDockable = nextActiveDockable is not IProportionalDockSplitter ? nextActiveDockable : null;
-            }
-            else
-            {
-                dock.ActiveDockable = null;
+                var indexActiveDockable = index > 0 ? index - 1 : 0;
+                if (dock.VisibleDockables.Count > 0)
+                {
+                    var nextActiveDockable = dock.VisibleDockables[indexActiveDockable];
+                    dock.ActiveDockable = nextActiveDockable is not IProportionalDockSplitter ? nextActiveDockable : null;
+                }
+                else
+                {
+                    dock.ActiveDockable = null;
+                }
             }
 
             if (dock.VisibleDockables.Count == 1)
