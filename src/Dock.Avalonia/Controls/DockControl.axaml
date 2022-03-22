@@ -55,14 +55,14 @@
             <DataTemplate DataType="dmc:IProportionalDock">
               <DockableControl TrackingMode="Visible"
                                ProportionalStackPanelSplitter.Proportion="{Binding Proportion}">
-                <ItemsControl Items="{Binding VisibleDockables}">
+                <ItemsControl Name="VisibleDockablesList" Items="{Binding VisibleDockables}">
                   <ItemsControl.Styles>
-                    <Style Selector="ItemsControl > ContentPresenter" x:DataType="core:IDock">
+                    <Style Selector="ItemsControl#VisibleDockablesList > ContentPresenter" x:DataType="core:IDock">
                       <Setter Property="(ProportionalStackPanelSplitter.Proportion)" Value="{Binding Proportion}" />
                     </Style>
-                    <Style Selector="ItemsControl > ContentPresenter > :is(Control)" x:DataType="core:IDock">
+                    <!--<Style Selector="ItemsControl#VisibleDockablesList > ContentPresenter > :is(Control)" x:DataType="core:IDock">
                       <Setter Property="(ProportionalStackPanelSplitter.Proportion)" Value="{Binding Proportion}" />
-                    </Style>
+                    </Style>-->
                   </ItemsControl.Styles>
                   <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
