@@ -87,5 +87,9 @@ namespace Dock.Model.Core
         /// Close layout.
         /// </summary>
         ICommand Close { get; }
+        
+        ICommand NextTabCommand { get; }
+        
+        ICommand PrevTabCommand { get; }
     }
 }

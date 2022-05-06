@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Windows.Input;
 using Dock.Model.Adapters;
@@ -35,6 +36,22 @@ namespace Dock.Model.ReactiveUI.Core
             GoForward = ReactiveCommand.Create(() => _navigateAdapter.GoForward());
             Navigate = ReactiveCommand.Create<object>(root => _navigateAdapter.Navigate(root, true));
             Close = ReactiveCommand.Create(() => _navigateAdapter.Close());
+            NextTabCommand = ReactiveCommand.Create(() =>
+            {
+                if (_visibleDockables == null || _activeDockable == null)
+                    return;
+                var index = _visibleDockables.IndexOf(_activeDockable);
+                if (index + 1 <= _visibleDockables.Count - 1)
+                    ActiveDockable = _visibleDockables[index + 1];
+            });
+            PrevTabCommand = ReactiveCommand.Create(() =>
+            {
+                if (_visibleDockables == null || _activeDockable == null)
+                    return;
+                var index = _visibleDockables.IndexOf(_activeDockable);
+                if (index > 0)
+                    ActiveDockable = _visibleDockables[index - 1];
+            });
         }
 
         /// <inheritdoc/>
@@ -159,5 +176,9 @@ namespace Dock.Model.ReactiveUI.Core
         /// <inheritdoc/>
         [IgnoreDataMember]
         public ICommand Close { get; }
+
+        public ICommand NextTabCommand { get; }
+
+        public ICommand PrevTabCommand { get; }
     }
 }

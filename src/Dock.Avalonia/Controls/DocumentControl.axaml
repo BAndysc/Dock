@@ -20,6 +20,12 @@
                    ZIndex="1"
                    x:DataType="dmc:IDocumentDock"
                    x:CompileBindings="True">
+          <DockPanel.KeyBindings>
+            <KeyBinding Gesture="Ctrl+Tab" Command="{Binding NextTabCommand}"/>
+            <KeyBinding Gesture="Shift+Ctrl+Tab" Command="{Binding PrevTabCommand}"/>
+            <KeyBinding Gesture="Cmd+Tab" Command="{Binding NextTabCommand}"/>
+            <KeyBinding Gesture="Shift+Cmd+Tab" Command="{Binding PrevTabCommand}"/>
+          </DockPanel.KeyBindings>
           <DockTabStrip x:Name="PART_TabStrip"
                         Items="{Binding VisibleDockables}"
                         SelectedItem="{Binding ActiveDockable, Mode=TwoWay}"
