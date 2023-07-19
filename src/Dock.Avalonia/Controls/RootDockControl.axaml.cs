@@ -17,6 +17,7 @@ public class RootDockControl : TemplatedControl
     {
         base.OnApplyTemplate(e);
         var mainContent = e.NameScope.Get<ContentControl>("PART_MainContent");
+        LogicalChildren.Add(mainContent);
         mainContent.AddHandler(PointerPressedEvent, (_, _) =>
         {
             if (DataContext is IRootDock rootDock)

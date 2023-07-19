@@ -35,7 +35,12 @@ public class DocumentControl : TemplatedControl
         get => GetValue(HeaderTemplateProperty);
         set => SetValue(HeaderTemplateProperty, value);
     }
-
+    protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
+    {
+        base.OnApplyTemplate(e);
+        var cc = e.NameScope.Get<ContentControl>("PART_ContentPresenter");
+        LogicalChildren.Add(cc);
+    }
     /// <summary>
     /// Gets or sets if this is the currently active dockable.
     /// </summary>

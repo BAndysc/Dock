@@ -260,6 +260,13 @@ public class DockControl : TemplatedControl, IDockControl
             _dockControlState.Process(position, delta, EventType.Pressed, action, this, Layout.Factory.DockControls);
         }
     }
+    
+    protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
+    {
+        base.OnApplyTemplate(e);
+        var cc = e.NameScope.Get<ContentControl>("PART_ContentControl");
+        LogicalChildren.Add(cc);
+    }
 
     private void ReleasedHandler(object? sender, PointerReleasedEventArgs e)
     {
