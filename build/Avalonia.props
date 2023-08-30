@@ -2,10 +2,10 @@
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <RestoreAdditionalProjectSources>
-        https://nuget.avaloniaui.net/repository/avalonia-all/index.json
+        https://nuget-feed-all.avaloniaui.net/v3/index.json
     </RestoreAdditionalProjectSources>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Avalonia" Version="0.10.999-cibuild0016933-beta" />
+    <PackageReference Include="Avalonia" Version="0.10.22" />
   </ItemGroup>
 </Project>
