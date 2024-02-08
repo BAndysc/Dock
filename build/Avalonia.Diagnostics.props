@@ -6,6 +6,6 @@
     </RestoreAdditionalProjectSources>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Avalonia.Diagnostics" Version="0.10.22" />
+    <PackageReference Include="Avalonia.Diagnostics" Version="0.10.999-cibuild0044575-beta" />
   </ItemGroup>
 </Project>
