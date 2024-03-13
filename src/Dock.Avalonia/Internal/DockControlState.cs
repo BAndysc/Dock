@@ -141,12 +141,10 @@ internal class DockControlState : IDockControlState
         {
             if (sourceDockable is IDock dock)
             {
-                sourceDockable = dock.ActiveDockable;
-            }
-
-            if (sourceDockable == null)
-            {
-                return;
+                if (dock.ActiveDockable is { } activeDockable)
+                    sourceDockable = activeDockable;
+                else
+                    return;
             }
 
             DockManager.Position = DockHelpers.ToDockPoint(point);
