@@ -12,21 +12,21 @@
 
     <Setter Property="Template">
       <ControlTemplate>
-        <ItemsControl ItemsSource="{TemplateBinding Items}"
-                      x:DataType="dmc:IRootDock"
-                      x:CompileBindings="True">
-          <ItemsControl.ItemsPanel>
+        <ItemsControlWorkaround ItemsSource="{TemplateBinding Items}"
+                                x:DataType="dmc:IRootDock"
+                                x:CompileBindings="True">
+          <ItemsControlWorkaround.ItemsPanel>
             <ItemsPanelTemplate>
               <StackPanel Orientation="{Binding $parent[ToolPinnedControl].Orientation}"
                           DockProperties.IsDropArea="True" />
             </ItemsPanelTemplate>
-          </ItemsControl.ItemsPanel>
-          <ItemsControl.DataTemplates>
+          </ItemsControlWorkaround.ItemsPanel>
+          <ItemsControlWorkaround.DataTemplates>
             <DataTemplate DataType="core:IDockable">
               <ToolPinItemControl Orientation="{Binding $parent[ToolPinnedControl].Orientation}" />
             </DataTemplate>
-          </ItemsControl.DataTemplates>
-        </ItemsControl>
+          </ItemsControlWorkaround.DataTemplates>
+        </ItemsControlWorkaround>
       </ControlTemplate>
     </Setter>
   </ControlTheme>

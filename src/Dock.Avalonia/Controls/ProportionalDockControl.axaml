@@ -11,9 +11,9 @@
     <Setter Property="Template">
       <ControlTemplate>
         <DockableControl TrackingMode="Visible">
-          <ItemsControl ItemsSource="{Binding VisibleDockables}" Name="PART_ContentControl">
-            <ItemsControl.Styles>
-              <Style Selector="ItemsControl > ContentPresenter">
+          <ItemsControlWorkaround ItemsSource="{Binding VisibleDockables}" Name="PART_ContentControl">
+            <ItemsControlWorkaround.Styles>
+              <Style Selector="ItemsControlWorkaround > ContentPresenter">
                 <Setter x:DataType="core:IDock" Property="(ProportionalStackPanel.Proportion)" Value="{Binding Proportion}" />
                 <Setter Property="(ProportionalStackPanel.IsCollapsed)">
                   <Setter.Value>
@@ -24,15 +24,15 @@
                   </Setter.Value>
                 </Setter>
               </Style>
-            </ItemsControl.Styles>
-            <ItemsControl.ItemsPanel>
+            </ItemsControlWorkaround.Styles>
+            <ItemsControlWorkaround.ItemsPanel>
               <ItemsPanelTemplate>
                 <ProportionalStackPanel DockProperties.IsDropArea="True"
                                         Background="Transparent"
                                         Orientation="{Binding Orientation, Converter={x:Static converters:OrientationConverter.Instance}}" />
               </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-          </ItemsControl>
+            </ItemsControlWorkaround.ItemsPanel>
+          </ItemsControlWorkaround>
         </DockableControl>
       </ControlTemplate>
     </Setter>

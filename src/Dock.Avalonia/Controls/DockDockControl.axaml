@@ -11,21 +11,21 @@
     <Setter Property="Template">
       <ControlTemplate>
         <DockableControl TrackingMode="Visible">
-          <ItemsControl ItemsSource="{Binding VisibleDockables}">
-            <ItemsControl.Styles>
-              <Style Selector="ItemsControl > ContentPresenter" x:DataType="core:IDock">
+          <ItemsControlWorkaround ItemsSource="{Binding VisibleDockables}">
+            <ItemsControlWorkaround.Styles>
+              <Style Selector="ItemsControlWorkaround > ContentPresenter" x:DataType="core:IDock">
                 <Setter Property="(DockPanel.Dock)"
                         Value="{Binding Dock, Converter={x:Static converters:DockModeConverter.Instance}}" />
               </Style>
-            </ItemsControl.Styles>
-            <ItemsControl.ItemsPanel>
+            </ItemsControlWorkaround.Styles>
+            <ItemsControlWorkaround.ItemsPanel>
               <ItemsPanelTemplate>
                 <DockPanel DockProperties.IsDropArea="True"
                            Background="Transparent"
                            LastChildFill="{Binding LastChildFill}"/>
               </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-          </ItemsControl>
+            </ItemsControlWorkaround.ItemsPanel>
+          </ItemsControlWorkaround>
         </DockableControl>
       </ControlTemplate>
     </Setter>
