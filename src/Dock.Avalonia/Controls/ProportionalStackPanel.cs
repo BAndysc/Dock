@@ -6,6 +6,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.Presenters;
 using Avalonia.Data;
 using Avalonia.Layout;
+using Avalonia.VisualTree;
 
 namespace Dock.Avalonia.Controls;
 
@@ -446,7 +447,17 @@ public class ProportionalStackPanel : Panel
     {
         AffectsParentMeasure<ProportionalStackPanel>(IsCollapsedProperty);
         AffectsParentArrange<ProportionalStackPanel>(IsCollapsedProperty);
-        AffectsParentMeasure<ProportionalStackPanel>(ProportionProperty);
-        AffectsParentArrange<ProportionalStackPanel>(ProportionProperty);
+        // Those lines cause "Layout cycle detected" and they prevent the control from being updated
+        // This is because Proportion might be updated for ALL children in Panel's Measure
+        // So it is not a cycle, simply if there is more than a few controls, it will be called multiple times
+        // AffectsParentMeasure<ProportionalStackPanel>(ProportionProperty);
+        // AffectsParentArrange<ProportionalStackPanel>(ProportionProperty);
+    }
+
+    internal static void AffectParentArrangeAndMeasureNow<TPanel>(Control? control) where TPanel : Panel
+    {
+        var panel = control?.GetVisualParent() as TPanel;
+        panel?.InvalidateMeasure();
+        panel?.InvalidateArrange();
     }
 }
