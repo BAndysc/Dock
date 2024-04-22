@@ -13,7 +13,7 @@
         <DockableControl TrackingMode="Visible">
           <ItemsControlWorkaround ItemsSource="{Binding VisibleDockables}" Name="PART_ContentControl">
             <ItemsControlWorkaround.Styles>
-              <Style Selector="ItemsControlWorkaround > ContentPresenter">
+              <Style Selector="ItemsControl > ContentPresenter">
                 <Setter x:DataType="core:IDock" Property="(ProportionalStackPanel.Proportion)" Value="{Binding Proportion}" />
                 <Setter Property="(ProportionalStackPanel.IsCollapsed)">
                   <Setter.Value>

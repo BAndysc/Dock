@@ -222,12 +222,12 @@ public class ProportionalStackPanelSplitter : Thumb
             targetElementProportion += dProportion;
         }
 
-        ProportionalStackPanel.SetProportion(target, targetElementProportion);
+        target.SetCurrentValue(ProportionalStackPanel.ProportionProperty, targetElementProportion);
         ProportionalStackPanel.AffectParentArrangeAndMeasureNow<ProportionalStackPanel>(target);
 
         if (child is not null)
         {
-            ProportionalStackPanel.SetProportion(child, neighbourProportion);
+            child.SetCurrentValue(ProportionalStackPanel.ProportionProperty, neighbourProportion);
             ProportionalStackPanel.AffectParentArrangeAndMeasureNow<ProportionalStackPanel>(child);
         }
     }

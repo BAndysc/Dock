@@ -13,7 +13,7 @@
         <DockableControl TrackingMode="Visible">
           <ItemsControlWorkaround ItemsSource="{Binding VisibleDockables}">
             <ItemsControlWorkaround.Styles>
-              <Style Selector="ItemsControlWorkaround > ContentPresenter" x:DataType="core:IDock">
+              <Style Selector="ItemsControl > ContentPresenter" x:DataType="core:IDock">
                 <Setter Property="(DockPanel.Dock)"
                         Value="{Binding Dock, Converter={x:Static converters:DockModeConverter.Instance}}" />
               </Style>

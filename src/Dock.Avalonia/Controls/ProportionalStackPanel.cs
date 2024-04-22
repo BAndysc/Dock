@@ -125,7 +125,7 @@ public class ProportionalStackPanel : Panel
                 if (!ProportionalStackPanelSplitter.IsSplitter(control, out _))
                 {
                     var proportion = (1.0 - toAssign) / unassignedProportions;
-                    SetProportion(control, proportion);
+                    control.SetCurrentValue(ProportionProperty, proportion);
                     assignedProportion += (1.0 - toAssign) / unassignedProportions;
                 }
             }
@@ -144,7 +144,7 @@ public class ProportionalStackPanel : Panel
                      }))
             {
                 var proportion = GetProportion(child) + toAdd;
-                SetProportion(child, proportion);
+                child.SetCurrentValue(ProportionProperty, proportion);
             }
         }
         else if (assignedProportion > 1)
@@ -160,7 +160,7 @@ public class ProportionalStackPanel : Panel
                      }))
             {
                 var proportion = GetProportion(child) - toRemove;
-                SetProportion(child, proportion);
+                child.SetCurrentValue(ProportionProperty, proportion);
             }
         }
     }
