@@ -63,18 +63,14 @@
                   Padding="{TemplateBinding Padding}"
                   ContextMenu="{DynamicResource DocumentTabStripItemContextMenu}">
             <DockableControl TrackingMode="Tab">
-              <StackPanel Background="Transparent"
-                          Orientation="Horizontal"
-                          Spacing="2"
+              <DockPanel Background="Transparent"
                           DockProperties.IsDragArea="True"
                           DockProperties.IsDropArea="True">
-                <Panel Margin="2">
-                  <ContentPresenter ContentTemplate="{Binding $parent[DocumentControl].HeaderTemplate}"
-                                    Content="{Binding}" />
-                </Panel>
                 <Button x:Name="PART_CloseButton"
+                        DockPanel.Dock="Right"
                         Command="{Binding Owner.Factory.CloseDockable}"
                         CommandParameter="{Binding}"
+                        Margin="2,0,0,0"
                         IsVisible="{Binding CanClose}">
                   <Button.Styles>
                     <Style Selector="Button">
@@ -101,7 +97,11 @@
                     </Path.Styles>
                   </Path>
                 </Button>
-              </StackPanel>
+                <Panel Margin="2">
+                  <ContentPresenter ContentTemplate="{Binding $parent[DocumentControl].HeaderTemplate}"
+                                    Content="{Binding}" />
+                </Panel>
+              </DockPanel>
             </DockableControl>
           </Border>
       </ControlTemplate>
