@@ -4,6 +4,7 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Styling;
+using Dock.Model.Controls;
 using Dock.Model.Core;
 
 namespace Dock.Avalonia.Controls;
@@ -40,6 +41,19 @@ public class ToolTabStripItem : TabStripItem
             {
                 factory.CloseDockable(dockable);
             }
+        }
+    }
+
+    protected override void OnDataContextChanged(EventArgs e)
+    {
+        base.OnDataContextChanged(e);
+        if (DataContext is IProportionalDockSplitter)
+        {
+            SetCurrentValue(IsVisibleProperty, false);
+        }
+        else
+        {
+            ClearValue(IsVisibleProperty);
         }
     }
 }
