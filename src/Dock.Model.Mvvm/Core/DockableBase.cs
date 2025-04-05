@@ -1,5 +1,4 @@
 ﻿using System.Runtime.Serialization;
-using CommunityToolkit.Mvvm.ComponentModel;
 using Dock.Model.Adapters;
 using Dock.Model.Core;
 
@@ -9,7 +8,7 @@ namespace Dock.Model.Mvvm.Core;
 /// Dockable base class.
 /// </summary>
 [DataContract(IsReference = true)]
-public abstract class DockableBase : ObservableObject, IDockable
+public abstract class DockableBase : ReactiveBase, IDockable
 {
     private readonly TrackingAdapter _trackingAdapter;
     private string _id = string.Empty;
@@ -18,6 +17,9 @@ public abstract class DockableBase : ObservableObject, IDockable
     private IDockable? _owner;
     private IDockable? _originalOwner;
     private IFactory? _factory;
+    private bool _isEmpty;
+    private bool _isCollapsable = true;
+    private double _proportion = double.NaN;
     private bool _canClose = true;
     private bool _canPin = true;
     private bool _canFloat = true;
@@ -80,6 +82,30 @@ public abstract class DockableBase : ObservableObject, IDockable
 
     /// <inheritdoc/>
     [DataMember(IsRequired = false, EmitDefaultValue = true)]
+    public bool IsEmpty
+    {
+        get => _isEmpty;
+        set => SetProperty(ref _isEmpty, value);
+    }
+
+    /// <inheritdoc/>
+    [DataMember(IsRequired = false, EmitDefaultValue = true)]
+    public bool IsCollapsable
+    {
+        get => _isCollapsable;
+        set => SetProperty(ref _isCollapsable, value);
+    }
+
+    /// <inheritdoc/>
+    [DataMember(IsRequired = false, EmitDefaultValue = true)]
+    public double Proportion
+    {
+        get => _proportion;
+        set => SetProperty(ref _proportion, value);
+    }
+
+    /// <inheritdoc/>
+    [DataMember(IsRequired = false, EmitDefaultValue = true)]
     public bool CanClose
     {
         get => _canClose;
@@ -101,6 +127,9 @@ public abstract class DockableBase : ObservableObject, IDockable
         get => _canFloat;
         set => SetProperty(ref _canFloat, value);
     }
+
+    /// <inheritdoc/>
+    public string? GetControlRecyclingId() => _id;
 
     /// <inheritdoc/>
     public virtual bool OnClose()

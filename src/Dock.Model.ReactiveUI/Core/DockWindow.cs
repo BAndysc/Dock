@@ -2,7 +2,6 @@
 using Dock.Model.Adapters;
 using Dock.Model.Controls;
 using Dock.Model.Core;
-using ReactiveUI;
 
 namespace Dock.Model.ReactiveUI.Core;
 
@@ -10,20 +9,9 @@ namespace Dock.Model.ReactiveUI.Core;
 /// Dock window.
 /// </summary>
 [DataContract(IsReference = true)]
-public class DockWindow : ReactiveObject, IDockWindow
+public partial class DockWindow : ReactiveBase, IDockWindow
 {
     private readonly IHostAdapter _hostAdapter;
-    private string _id;
-    private double _x;
-    private double _y;
-    private double _width;
-    private double _height;
-    private bool _topmost;
-    private string _title;
-    private IDockable? _owner;
-    private IFactory? _factory;
-    private IRootDock? _layout;
-    private IHostWindow? _host;
 
     /// <summary>
     /// Initializes new instance of the <see cref="DockWindow"/> class.
@@ -37,91 +25,47 @@ public class DockWindow : ReactiveObject, IDockWindow
 
     /// <inheritdoc/>
     [DataMember(IsRequired = false, EmitDefaultValue = true)]
-    public string Id
-    {
-        get => _id;
-        set => this.RaiseAndSetIfChanged(ref _id, value);
-    }
+    public partial string Id { get; set; }
 
     /// <inheritdoc/>
     [DataMember(IsRequired = true, EmitDefaultValue = true)]
-    public double X
-    {
-        get => _x;
-        set => this.RaiseAndSetIfChanged(ref _x, value);
-    }
+    public partial double X { get; set; }
 
     /// <inheritdoc/>
     [DataMember(IsRequired = true, EmitDefaultValue = true)]
-    public double Y
-    {
-        get => _y;
-        set => this.RaiseAndSetIfChanged(ref _y, value);
-    }
+    public partial double Y { get; set; }
 
     /// <inheritdoc/>
     [DataMember(IsRequired = true, EmitDefaultValue = true)]
-    public double Width
-    {
-        get => _width;
-        set => this.RaiseAndSetIfChanged(ref _width, value);
-    }
+    public partial double Width { get; set; }
 
     /// <inheritdoc/>
     [DataMember(IsRequired = true, EmitDefaultValue = true)]
-    public double Height
-    {
-        get => _height;
-        set => this.RaiseAndSetIfChanged(ref _height, value);
-    }
+    public partial double Height { get; set; }
 
     /// <inheritdoc/>
     [DataMember(IsRequired = false, EmitDefaultValue = true)]
-    public bool Topmost
-    {
-        get => _topmost;
-        set => this.RaiseAndSetIfChanged(ref _topmost, value);
-    }
+    public partial bool Topmost { get; set; }
 
     /// <inheritdoc/>
     [DataMember(IsRequired = false, EmitDefaultValue = true)]
-    public string Title
-    {
-        get => _title;
-        set => this.RaiseAndSetIfChanged(ref _title, value);
-    }
+    public partial string Title { get; set; }
 
     /// <inheritdoc/>
     [IgnoreDataMember]
-    public IDockable? Owner
-    {
-        get => _owner;
-        set => this.RaiseAndSetIfChanged(ref _owner, value);
-    }
+    public partial IDockable? Owner { get; set; }
 
     /// <inheritdoc/>
     [IgnoreDataMember]
-    public IFactory? Factory
-    {
-        get => _factory;
-        set => this.RaiseAndSetIfChanged(ref _factory, value);
-    }
+    public partial IFactory? Factory { get; set; }
 
     /// <inheritdoc/>
     [DataMember(IsRequired = false, EmitDefaultValue = true)]
-    public IRootDock? Layout
-    {
-        get => _layout;
-        set => this.RaiseAndSetIfChanged(ref _layout, value);
-    }
+    public partial IRootDock? Layout { get; set; }
 
     /// <inheritdoc/>
     [IgnoreDataMember]
-    public IHostWindow? Host
-    {
-        get => _host;
-        set => this.RaiseAndSetIfChanged(ref _host, value);
-    }
+    public partial IHostWindow? Host { get; set; }
 
     /// <inheritdoc/>
     public virtual bool OnClose()

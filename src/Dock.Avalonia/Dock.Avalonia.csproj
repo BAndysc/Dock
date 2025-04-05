@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net6.0;net8.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net6.0;net8.0</TargetFrameworks>
     <OutputType>Library</OutputType>
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
     <Nullable>enable</Nullable>
@@ -16,13 +16,15 @@
   <Import Project="..\..\build\SourceLink.props" />
   <Import Project="..\..\build\ReferenceAssemblies.props" />
   <Import Project="..\..\build\Avalonia.props" />
-  <Import Project="..\..\build\Avalonia.Diagnostics.props" Condition="'$(Configuration)' == 'Debug'" />
 
   <ItemGroup>
     <AvaloniaResource Include="Assets\*" Exclude="bin\**;obj\**;**\*.xproj;packages\**;@(EmbeddedResource)" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Avalonia.Controls.ProportionalStackPanel\Avalonia.Controls.ProportionalStackPanel.csproj" />
+    <ProjectReference Include="..\Avalonia.Controls.Recycling\Avalonia.Controls.Recycling.csproj" />
+    <ProjectReference Include="..\Avalonia.MarkupExtension\Avalonia.MarkupExtension.csproj" />
     <ProjectReference Include="..\Dock.Model\Dock.Model.csproj" />
     <ProjectReference Include="..\Dock.Settings\Dock.Settings.csproj" />
   </ItemGroup>

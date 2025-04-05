@@ -22,7 +22,7 @@ namespace Dock.Model.Avalonia.Core;
 [JsonDerivedType(typeof(Tool), typeDiscriminator: "Tool")]
 [JsonDerivedType(typeof(ToolDock), typeDiscriminator: "ToolDock")]
 [JsonDerivedType(typeof(DockBase), typeDiscriminator: "DockBase")]
-public abstract class DockableBase : StyledElement, IDockable
+public abstract class DockableBase : ReactiveBase, IDockable
 {
     /// <summary>
     /// Defines the <see cref="Id"/> property.
@@ -61,6 +61,24 @@ public abstract class DockableBase : StyledElement, IDockable
         AvaloniaProperty.RegisterDirect<DockableBase, IFactory?>(nameof(Factory), o => o.Factory, (o, v) => o.Factory = v);
 
     /// <summary>
+    /// Defines the <see cref="IsEmpty"/> property.
+    /// </summary>
+    public static readonly DirectProperty<DockableBase, bool> IsEmptyProperty =
+        AvaloniaProperty.RegisterDirect<DockableBase, bool>(nameof(IsEmpty), o => o.IsEmpty, (o, v) => o.IsEmpty = v);
+
+    /// <summary>
+    /// Defines the <see cref="IsCollapsable"/> property.
+    /// </summary>
+    public static readonly DirectProperty<DockableBase, bool> IsCollapsableProperty =
+        AvaloniaProperty.RegisterDirect<DockableBase, bool>(nameof(IsCollapsable), o => o.IsCollapsable, (o, v) => o.IsCollapsable = v, true);
+
+    /// <summary>
+    /// Defines the <see cref="Proportion"/> property.
+    /// </summary>
+    public static readonly DirectProperty<DockBase, double> ProportionProperty =
+        AvaloniaProperty.RegisterDirect<DockBase, double>(nameof(Proportion), o => o.Proportion, (o, v) => o.Proportion = v, double.NaN);
+
+    /// <summary>
     /// Defines the <see cref="CanClose"/> property.
     /// </summary>
     public static readonly DirectProperty<DockableBase, bool> CanCloseProperty =
@@ -85,6 +103,9 @@ public abstract class DockableBase : StyledElement, IDockable
     private IDockable? _owner;
     private IDockable? _originalOwner;
     private IFactory? _factory;
+    private bool _isEmpty;
+    private bool _isCollapsable = true;
+    private double _proportion = double.NaN;
     private bool _canClose = true;
     private bool _canPin = true;
     private bool _canFloat = true;
@@ -155,6 +176,33 @@ public abstract class DockableBase : StyledElement, IDockable
 
     /// <inheritdoc/>
     [DataMember(IsRequired = false, EmitDefaultValue = true)]
+    [JsonPropertyName("IsEmpty")]
+    public bool IsEmpty
+    {
+        get => _isEmpty;
+        set => SetAndRaise(IsEmptyProperty, ref _isEmpty, value);
+    }
+
+    /// <inheritdoc/>
+    [DataMember(IsRequired = false, EmitDefaultValue = true)]
+    [JsonPropertyName("IsCollapsable")]
+    public bool IsCollapsable
+    {
+        get => _isCollapsable;
+        set => SetAndRaise(IsCollapsableProperty, ref _isCollapsable, value);
+    }
+
+    /// <inheritdoc/>
+    [DataMember(IsRequired = false, EmitDefaultValue = true)]
+    [JsonPropertyName("Proportion")]
+    public double Proportion
+    {
+        get => _proportion;
+        set => SetAndRaise(ProportionProperty, ref _proportion, value);
+    }
+
+    /// <inheritdoc/>
+    [DataMember(IsRequired = false, EmitDefaultValue = true)]
     [JsonPropertyName("CanClose")]
     public bool CanClose
     {
@@ -179,6 +227,9 @@ public abstract class DockableBase : StyledElement, IDockable
         get => _canFloat;
         set => SetAndRaise(CanFloatProperty, ref _canFloat, value);
     }
+
+    /// <inheritdoc/>
+    public string? GetControlRecyclingId() => _id;
 
     /// <inheritdoc/>
     public virtual bool OnClose()

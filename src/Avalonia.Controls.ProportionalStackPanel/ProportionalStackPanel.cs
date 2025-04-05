@@ -1,20 +1,19 @@
 using System;
 using System.Diagnostics;
 using System.Linq;
-using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Controls.Presenters;
 using Avalonia.Data;
 using Avalonia.Layout;
 using Avalonia.VisualTree;
 
-namespace Dock.Avalonia.Controls;
+namespace Avalonia.Controls;
 
 /// <summary>
 /// A Panel that stacks controls either horizontally or vertically, with proportional resizing.
 /// </summary>
 public class ProportionalStackPanel : Panel
 {
+    private bool isAssigningProportions;
+
     /// <summary>
     /// Defines the <see cref="Orientation"/> property.
     /// </summary>
@@ -34,7 +33,8 @@ public class ProportionalStackPanel : Panel
     /// Defines the Proportion attached property.
     /// </summary>
     public static readonly AttachedProperty<double> ProportionProperty =
-        AvaloniaProperty.RegisterAttached<ProportionalStackPanel, Control, double>("Proportion", double.NaN, false, BindingMode.TwoWay);
+        AvaloniaProperty.RegisterAttached<ProportionalStackPanel, Control, double>("Proportion", double.NaN, false,
+            BindingMode.TwoWay);
 
     /// <summary>
     /// Gets the value of the Proportion attached property on the specified control.
@@ -60,7 +60,8 @@ public class ProportionalStackPanel : Panel
     /// Defines the IsCollapsed attached property.
     /// </summary>
     public static readonly AttachedProperty<bool> IsCollapsedProperty =
-        AvaloniaProperty.RegisterAttached<ProportionalStackPanel, Control, bool>("IsCollapsed", false, false, BindingMode.TwoWay);
+        AvaloniaProperty.RegisterAttached<ProportionalStackPanel, Control, bool>("IsCollapsed", false, false,
+            BindingMode.TwoWay);
 
     /// <summary>
     /// Gets the value of the IsCollapsed attached property on the specified control.
@@ -82,7 +83,20 @@ public class ProportionalStackPanel : Panel
         control.SetValue(IsCollapsedProperty, value);
     }
 
-    private void AssignProportions(global::Avalonia.Controls.Controls children)
+    private void AssignProportions()
+    {
+        isAssigningProportions = true;
+        try
+        {
+            AssignProportionsInternal(Children);
+        }
+        finally
+        {
+            isAssigningProportions = false;
+        }
+    }
+
+    private static void AssignProportionsInternal(global::Avalonia.Controls.Controls children)
     {
         var assignedProportion = 0.0;
         var unassignedProportions = 0;
@@ -192,7 +206,7 @@ public class ProportionalStackPanel : Panel
                         continue;
                     }
                 }
-                
+
                 var thickness = proportionalStackPanelSplitter.Thickness;
                 totalThickness += thickness;
             }
@@ -210,11 +224,11 @@ public class ProportionalStackPanel : Panel
     {
         var horizontal = Orientation == Orientation.Horizontal;
 
-        if (constraint == Size.Infinity 
-            || (horizontal && double.IsInfinity(constraint.Width)) 
+        if (constraint == Size.Infinity
+            || (horizontal && double.IsInfinity(constraint.Width))
             || (!horizontal && double.IsInfinity(constraint.Height)))
         {
-            throw new Exception("Proportional StackPanel cannot be inside a control that offers infinite space.");                
+            throw new Exception("Proportional StackPanel cannot be inside a control that offers infinite space.");
         }
 
         var usedWidth = 0.0;
@@ -223,10 +237,11 @@ public class ProportionalStackPanel : Panel
         var maximumHeight = 0.0;
         var splitterThickness = GetTotalSplitterThickness(Children);
 
-        AssignProportions(Children);
+        AssignProportions();
 
         var needsNextSplitter = false;
-        
+        double sumOfFractions = 0;
+
         // Measure each of the Children
         for (var i = 0; i < Children.Count; i++)
         {
@@ -256,14 +271,16 @@ public class ProportionalStackPanel : Panel
                 {
                     case Orientation.Horizontal:
                     {
-                        var width = Math.Max(0, (constraint.Width - splitterThickness) * proportion);
+                        var width = CalculateDimension(constraint.Width - splitterThickness, proportion,
+                            ref sumOfFractions);
                         var size = constraint.WithWidth(width);
                         control.Measure(size);
                         break;
                     }
                     case Orientation.Vertical:
                     {
-                        var height = Math.Max(0, (constraint.Height - splitterThickness) * proportion);
+                        var height = CalculateDimension(constraint.Height - splitterThickness, proportion,
+                            ref sumOfFractions);
                         var size = constraint.WithHeight(height);
                         control.Measure(size);
                         break;
@@ -300,7 +317,8 @@ public class ProportionalStackPanel : Panel
                     }
                     else
                     {
-                        usedWidth += Math.Max(0, (constraint.Width - splitterThickness) * proportion);
+                        usedWidth += CalculateDimension(constraint.Width - splitterThickness, proportion,
+                            ref sumOfFractions);
                     }
 
                     break;
@@ -315,7 +333,8 @@ public class ProportionalStackPanel : Panel
                     }
                     else
                     {
-                        usedHeight += Math.Max(0, (constraint.Height - splitterThickness) * proportion);
+                        usedHeight += CalculateDimension(constraint.Height - splitterThickness, proportion,
+                            ref sumOfFractions);
                     }
 
                     break;
@@ -341,9 +360,10 @@ public class ProportionalStackPanel : Panel
         var splitterThickness = GetTotalSplitterThickness(Children);
         var index = 0;
 
-        AssignProportions(Children);
+        AssignProportions();
 
         var needsNextSplitter = false;
+        double sumOfFractions = 0;
 
         for (var i = 0; i < Children.Count; i++)
         {
@@ -398,7 +418,8 @@ public class ProportionalStackPanel : Panel
                         else
                         {
                             Debug.Assert(!double.IsNaN(proportion));
-                            var width = Math.Max(0, (arrangeSize.Width - splitterThickness) * proportion);
+                            var width = CalculateDimension(arrangeSize.Width - splitterThickness, proportion,
+                                ref sumOfFractions);
                             remainingRect = remainingRect.WithWidth(width);
                             left += width;
                         }
@@ -415,7 +436,8 @@ public class ProportionalStackPanel : Panel
                         else
                         {
                             Debug.Assert(!double.IsNaN(proportion));
-                            var height = Math.Max(0, (arrangeSize.Height - splitterThickness) * proportion);
+                            var height = CalculateDimension(arrangeSize.Height - splitterThickness, proportion,
+                                ref sumOfFractions);
                             remainingRect = remainingRect.WithHeight(height);
                             top += height;
                         }
@@ -430,6 +452,45 @@ public class ProportionalStackPanel : Panel
         }
 
         return arrangeSize;
+    }
+
+    private double CalculateDimension(
+        double dimension,
+        double proportion,
+        ref double sumOfFractions)
+    {
+        var childDimension = dimension * proportion;
+        var flooredChildDimension = Math.Floor(childDimension);
+
+        // sums fractions from the division
+        sumOfFractions += childDimension - flooredChildDimension;
+
+        // if the sum of fractions made up a whole pixel/pixels, add it to the dimension
+        var round = Math.Round(sumOfFractions, 1);
+        
+#if NETSTANDARD2_0
+        var clamp = Clamp(Math.Floor(sumOfFractions), 1, double.MaxValue);
+#else
+        var clamp = Math.Clamp(Math.Floor(sumOfFractions), 1, double.MaxValue);
+#endif
+        if (round - clamp >= 0)
+        {
+            sumOfFractions -= Math.Round(sumOfFractions);
+            return Math.Max(0, flooredChildDimension + 1);
+        }
+
+        return Math.Max(0, flooredChildDimension);
+
+#if NETSTANDARD2_0
+        static T Clamp<T>(T value, T min, T max) where T : IComparable<T>
+        {
+            if (value.CompareTo(min) < 0)
+                return min;
+            if (value.CompareTo(max) > 0)
+                return max;
+            return value;
+        }
+#endif
     }
 
     /// <inheritdoc/>
@@ -447,17 +508,17 @@ public class ProportionalStackPanel : Panel
     {
         AffectsParentMeasure<ProportionalStackPanel>(IsCollapsedProperty);
         AffectsParentArrange<ProportionalStackPanel>(IsCollapsedProperty);
-        // Those lines cause "Layout cycle detected" and they prevent the control from being updated
-        // This is because Proportion might be updated for ALL children in Panel's Measure
-        // So it is not a cycle, simply if there is more than a few controls, it will be called multiple times
-        // AffectsParentMeasure<ProportionalStackPanel>(ProportionProperty);
-        // AffectsParentArrange<ProportionalStackPanel>(ProportionProperty);
-    }
 
-    internal static void AffectParentArrangeAndMeasureNow<TPanel>(Control? control) where TPanel : Panel
-    {
-        var panel = control?.GetVisualParent() as TPanel;
-        panel?.InvalidateMeasure();
-        panel?.InvalidateArrange();
+        ProportionProperty.Changed.AddClassHandler<Control>((sender, e) =>
+        {
+            if (sender.GetVisualParent() is not ProportionalStackPanel parent)
+                return;
+
+            if (parent.isAssigningProportions)
+                return;
+
+            parent.InvalidateMeasure();
+            parent.InvalidateArrange();
+        });
     }
 }

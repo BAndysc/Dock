@@ -1,11 +1,8 @@
-using System;
 using System.Collections.Generic;
-using Avalonia;
-using Avalonia.Controls;
+using Avalonia.Controls.Recycling.Model;
 using Avalonia.Controls.Templates;
-using Dock.Model.Core;
 
-namespace Dock.Avalonia.Controls.Recycling;
+namespace Avalonia.Controls.Recycling;
 
 /// <summary>
 /// 
@@ -66,29 +63,22 @@ public class ControlRecycling : AvaloniaObject, IControlRecycling
     /// <returns></returns>
     public object? Build(object? data, object? existing, object? parent)
     {
-        if (data is null)
+        var key = data;
+        if (key is null)
         {
             return null;
         }
 
-        var key = data;
-
-        if (TryToUseIdAsKey && data is IDockable dockable)
+        if (TryToUseIdAsKey && key is IControlRecyclingIdProvider idProvider)
         {
-#if DEBUG
-            Console.WriteLine($"Build: {data}, Id='{dockable.Id}'");
-#endif
-            if (!string.IsNullOrWhiteSpace(dockable.Id))
+            if (!string.IsNullOrWhiteSpace(idProvider.GetControlRecyclingId()))
             {
-                key = dockable.Id;
+                key = idProvider.GetControlRecyclingId();
             }
         }
 
         if (TryGetValue(key, out var control))
         {
-#if DEBUG
-            Console.WriteLine($"[Cached] {key}, {control}");
-#endif
             return control;
         }
 
@@ -100,10 +90,8 @@ public class ControlRecycling : AvaloniaObject, IControlRecycling
             return null;
         }
 
-        Add(key, control);
-#if DEBUG
-        Console.WriteLine($"[Added] {key}, {control}");
-#endif
+        Add(key!, control);
+
         return control;
     }
 

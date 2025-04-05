@@ -1,16 +1,24 @@
-using Avalonia;
-using Avalonia.Controls;
+using Avalonia.Controls.Recycling.Model;
 using Avalonia.Controls.Templates;
-using Dock.Model.Core;
-using Dock.Settings;
+using Avalonia.Data;
 
-namespace Dock.Avalonia.Controls.Recycling;
+namespace Avalonia.Controls.Recycling;
 
 /// <summary>
 /// 
 /// </summary>
 public class ControlRecyclingDataTemplate : AvaloniaObject, IRecyclingDataTemplate
 {
+    /// <summary>
+    /// Defines the ControlRecycling attached property.
+    /// </summary>
+    public static readonly AttachedProperty<IControlRecycling?> ControlRecyclingProperty =
+        AvaloniaProperty.RegisterAttached<ControlRecyclingDataTemplate, Control, IControlRecycling?>(
+            "ControlRecycling",
+            null, 
+            true, 
+            BindingMode.TwoWay);
+
     /// <summary>
     /// 
     /// </summary>
@@ -24,6 +32,26 @@ public class ControlRecyclingDataTemplate : AvaloniaObject, IRecyclingDataTempla
     {
         get => GetValue(ParentProperty);
         set => SetValue(ParentProperty, value);
+    }
+
+    /// <summary>
+    /// Gets the value of the ControlRecycling attached property on the specified control.
+    /// </summary>
+    /// <param name="control">The control.</param>
+    /// <returns>The ControlRecycling attached property.</returns>
+    public static IControlRecycling? GetControlRecycling(AvaloniaObject control)
+    {
+        return control.GetValue(ControlRecyclingProperty);
+    }
+
+    /// <summary>
+    /// Sets the value of the ControlRecycling attached property on the specified control.
+    /// </summary>
+    /// <param name="control">The control.</param>
+    /// <param name="value">The value of the ControlRecycling property.</param>
+    public static void SetControlRecycling(AvaloniaObject control, IControlRecycling? value)
+    {
+        control.SetValue(ControlRecyclingProperty, value);
     }
 
     /// <summary>
@@ -59,7 +87,7 @@ public class ControlRecyclingDataTemplate : AvaloniaObject, IRecyclingDataTempla
             return null;
         }
 
-        var controlRecycling = DockProperties.GetControlRecycling(parent);
+        var controlRecycling = ControlRecyclingDataTemplate.GetControlRecycling(parent);
         if (controlRecycling is not null)
         {
             return controlRecycling.Build(data, existing, parent) as Control;

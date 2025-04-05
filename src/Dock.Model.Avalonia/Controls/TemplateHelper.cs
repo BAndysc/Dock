@@ -1,9 +1,9 @@
 using System;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Recycling;
 using Avalonia.Controls.Templates;
 using Avalonia.Markup.Xaml.Templates;
-using Dock.Settings;
 
 namespace Dock.Model.Avalonia.Controls;
 
@@ -16,14 +16,11 @@ internal static class TemplateHelper
             return null;
         }
 
-        var controlRecycling = DockProperties.GetControlRecycling(parent);
+        var controlRecycling = ControlRecyclingDataTemplate.GetControlRecycling(parent);
         if (controlRecycling is not null)
         {
             if (controlRecycling.TryGetValue(content, out var control))
             {
-#if DEBUG
-                Console.WriteLine($"[Cached] {content}, {control}");
-#endif
                 return control as Control;
             }
 
@@ -31,9 +28,6 @@ internal static class TemplateHelper
             if (control is not null)
             {
                 controlRecycling.Add(content, control);
-#if DEBUG
-                Console.WriteLine($"[Added] {content}, {control}");
-#endif
             }
 
             return control as Control;

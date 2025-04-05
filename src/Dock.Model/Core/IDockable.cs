@@ -1,10 +1,12 @@
 ﻿
+using Avalonia.Controls.Recycling.Model;
+
 namespace Dock.Model.Core;
 
 /// <summary>
 /// Dockable contract.
 /// </summary>
-public interface IDockable
+public interface IDockable : IControlRecyclingIdProvider
 {
     /// <summary>
     /// Gets or sets dockable id.
@@ -35,6 +37,21 @@ public interface IDockable
     /// Gets or sets dockable factory.
     /// </summary>
     IFactory? Factory { get; set; }
+
+    /// <summary>
+    /// Gets if the dockable is empty.
+    /// </summary>
+    bool IsEmpty { get; set; }
+
+    /// <summary>
+    /// Gets or sets if the dockable collapses when all its children are removed.
+    /// </summary>
+    bool IsCollapsable { get; set; }
+
+    /// <summary> 
+    /// Gets or sets splitter proportion. 
+    /// </summary> 
+    double Proportion { get; set; }
 
     /// <summary>
     /// Gets or sets if the dockable can be closed.

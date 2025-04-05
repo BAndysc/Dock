@@ -1,7 +1,6 @@
 ﻿using System.Runtime.Serialization;
 using Dock.Model.Adapters;
 using Dock.Model.Core;
-using ReactiveUI;
 
 namespace Dock.Model.ReactiveUI.Core;
 
@@ -9,98 +8,75 @@ namespace Dock.Model.ReactiveUI.Core;
 /// Dockable base class.
 /// </summary>
 [DataContract(IsReference = true)]
-public abstract class DockableBase : ReactiveObject, IDockable
+public abstract partial class DockableBase : ReactiveBase, IDockable
 {
     private readonly TrackingAdapter _trackingAdapter;
-    private string _id = string.Empty;
-    private string _title = string.Empty;
-    private object? _context;
-    private IDockable? _owner;
-    private IDockable? _originalOwner;
-    private IFactory? _factory;
-    private bool _canClose = true;
-    private bool _canPin = true;
-    private bool _canFloat = true;
 
     /// <summary>
     /// Initializes new instance of the <see cref="DockableBase"/> class.
     /// </summary>
     protected DockableBase()
     {
+        _id = string.Empty;
+        _title = string.Empty;
+        _isCollapsable = true;
+        _proportion = double.NaN;
+        _canClose = true;
+        _canPin = true;
+        _canFloat = true;
         _trackingAdapter = new TrackingAdapter();
     }
 
     /// <inheritdoc/>
     [DataMember(IsRequired = false, EmitDefaultValue = true)]
-    public string Id
-    {
-        get => _id;
-        set => this.RaiseAndSetIfChanged(ref _id, value);
-    }
+    public partial string Id { get; set; }
 
     /// <inheritdoc/>
     [DataMember(IsRequired = false, EmitDefaultValue = true)]
-    public string Title
-    {
-        get => _title;
-        set => this.RaiseAndSetIfChanged(ref _title, value);
-    }
+    public partial string Title { get; set; }
 
     /// <inheritdoc/>
     [IgnoreDataMember]
-    public object? Context
-    {
-        get => _context;
-        set => this.RaiseAndSetIfChanged(ref _context, value);
-    }
+    public partial object? Context { get; set; }
 
     /// <inheritdoc/>
     [IgnoreDataMember]
-    public IDockable? Owner
-    {
-        get => _owner;
-        set => this.RaiseAndSetIfChanged(ref _owner, value);
-    }
+    public partial IDockable? Owner { get; set; }
 
     /// <inheritdoc/>
     [IgnoreDataMember]
-    public IDockable? OriginalOwner
-    {
-        get => _originalOwner;
-        set => this.RaiseAndSetIfChanged(ref _originalOwner, value);
-    }
+    public partial IDockable? OriginalOwner { get; set; }
 
     /// <inheritdoc/>
     [IgnoreDataMember]
-    public IFactory? Factory
-    {
-        get => _factory;
-        set => this.RaiseAndSetIfChanged(ref _factory, value);
-    }
+    public partial IFactory? Factory { get; set; }
 
     /// <inheritdoc/>
     [DataMember(IsRequired = false, EmitDefaultValue = true)]
-    public bool CanClose
-    {
-        get => _canClose;
-        set => this.RaiseAndSetIfChanged(ref _canClose, value);
-    }
+    public partial bool IsEmpty { get; set; }
 
     /// <inheritdoc/>
     [DataMember(IsRequired = false, EmitDefaultValue = true)]
-    public bool CanPin
-    {
-        get => _canPin;
-        set => this.RaiseAndSetIfChanged(ref _canPin, value);
-    }
+    public partial bool IsCollapsable { get; set; }
 
     /// <inheritdoc/>
     [DataMember(IsRequired = false, EmitDefaultValue = true)]
-    public bool CanFloat
-    {
-        get => _canFloat;
-        set => this.RaiseAndSetIfChanged(ref _canFloat, value);
-    }
+    public partial double Proportion { get; set; }
+
+    /// <inheritdoc/>
+    [DataMember(IsRequired = false, EmitDefaultValue = true)]
+    public partial bool CanClose { get; set; }
+
+    /// <inheritdoc/>
+    [DataMember(IsRequired = false, EmitDefaultValue = true)]
+    public partial bool CanPin { get; set; }
+
+    /// <inheritdoc/>
+    [DataMember(IsRequired = false, EmitDefaultValue = true)]
+    public partial bool CanFloat { get; set; }
+
+    /// <inheritdoc/>
+    public string? GetControlRecyclingId() => _id;
 
     /// <inheritdoc/>
     public virtual bool OnClose()

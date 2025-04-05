@@ -353,10 +353,10 @@ public abstract partial class FactoryBase
 
         Debug.Assert(rootDock.PinnedDock != null);
 
-        RemoveAllVisibleDockables(rootDock.PinnedDock);
+        RemoveAllVisibleDockables(rootDock.PinnedDock!);
 
         dockable.OriginalOwner = dockable.Owner;
-        AddVisibleDockable(rootDock.PinnedDock, dockable);
+        AddVisibleDockable(rootDock.PinnedDock!, dockable);
     }
 
     /// <inheritdoc/>
@@ -527,7 +527,7 @@ public abstract partial class FactoryBase
                     else
                     {
                         Debug.Assert(dockable.OriginalOwner is IDock);
-                        var originalOwner = (IDock)dockable.OriginalOwner;
+                        var originalOwner = (IDock)dockable.OriginalOwner!;
                         HidePreviewingDockables(rootDock);
                         AddVisibleDockable(originalOwner, dockable);
                     }
@@ -755,7 +755,7 @@ public abstract partial class FactoryBase
 
         var newIsEmpty = dock.VisibleDockables == null
                          || dock.VisibleDockables?.Count == 0
-                         || dock.VisibleDockables!.All(x => x is IDock { IsEmpty: true } or IProportionalDockSplitter);
+                         || dock.VisibleDockables!.All(x => x is IDock { IsEmpty: true, IsCollapsable: true } or IProportionalDockSplitter);
 
         if (oldIsEmpty != newIsEmpty)
         {

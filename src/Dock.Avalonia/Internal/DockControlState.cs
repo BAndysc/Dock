@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Input;
 using Avalonia.VisualTree;
 using Dock.Avalonia.Controls;
 using Dock.Model.Core;
@@ -141,10 +140,17 @@ internal class DockControlState : IDockControlState
         {
             if (sourceDockable is IDock dock)
             {
-                if (dock.ActiveDockable is { } activeDockable)
-                    sourceDockable = activeDockable;
-                else
+                if (dock.ActiveDockable == null)
+                {
                     return;
+                }
+
+                sourceDockable = dock.ActiveDockable;
+            }
+
+            if (sourceDockable == null)
+            {
+                return;
             }
 
             DockManager.Position = DockHelpers.ToDockPoint(point);
