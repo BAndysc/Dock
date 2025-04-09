@@ -97,7 +97,7 @@
                     </Path.Styles>
                   </Path>
                 </Button>
-                <Panel Margin="2">
+                <Panel Margin="2" ClipToBounds="True">
                   <ContentPresenter ContentTemplate="{Binding $parent[DocumentControl].HeaderTemplate}"
                                     Content="{Binding}" />
                 </Panel>
